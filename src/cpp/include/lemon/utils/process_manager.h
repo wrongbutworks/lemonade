@@ -35,7 +35,11 @@ public:
         int timeout_seconds = -1,
         bool capture_stderr = true);
 
-    static void stop_process(ProcessHandle handle);
+    // POSIX platforms pause after termination so a GPU driver can reclaim the
+    // child's device memory before the next backend allocates. Pass
+    // gpu_backend=false when the child ran on a CPU-only backend: there is no
+    // driver state to settle, and the pause is pure latency.
+    static void stop_process(ProcessHandle handle, bool gpu_backend = true);
 
     // Must be non-mutating: on POSIX it must not reap the child, because
     // status/health checks may call this frequently.

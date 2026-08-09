@@ -190,21 +190,26 @@ SAMPLE_TOOL = {
 # Models for endpoint testing (inference-agnostic, just need any valid small model)
 ENDPOINT_TEST_MODEL = "Tiny-Test-Model-GGUF"
 
-# Model for tool-calling tests (must have native tool-calling support in its chat template)
-TOOL_CALLING_MODEL = "Qwen3-4B-Instruct-2507-GGUF"
+# Model for tool-calling tests (must have native tool-calling support in its chat
+# template). Shares a checkpoint with VISION_MODEL so the bundled CLI/Endpoints
+# CI job downloads it once.
+TOOL_CALLING_MODEL = "Qwen3.5-0.8B-GGUF"
 
 # Secondary model for multi-model testing (small, fast to load)
 MULTI_MODEL_SECONDARY = "Tiny-Test-Model-GGUF"
 
-# Secondary model for eviction testing
-SECOND_TEST_MODEL_EVICTION = "Phi-4-mini-instruct-GGUF"
+# Second model for eviction testing. The eviction suite drives the engine with
+# /internal/simulate-vram-pressure, so nothing it asserts depends on the model's
+# real footprint — it only needs a second distinct llama.cpp process.
+SECOND_TEST_MODEL_EVICTION = "Tiny-Test-Model-2-GGUF"
 
 # Tertiary model for LRU eviction testing
 MULTI_MODEL_TERTIARY = "Qwen3-0.6B-GGUF"
 
 # A further small LLM, distinct from every model above, for tests that need one
-# more resident model. Kept small: runners without a model cache re-download it.
-MULTI_MODEL_QUATERNARY = "Llama-3.2-1B-Instruct-GGUF"
+# more resident model. Shares a checkpoint with VISION_MODEL / TOOL_CALLING_MODEL
+# so runners without a model cache download it once instead of twice.
+MULTI_MODEL_QUATERNARY = "Qwen3.5-0.8B-GGUF"
 
 # Whisper test configuration
 WHISPER_MODEL = "Whisper-Tiny"

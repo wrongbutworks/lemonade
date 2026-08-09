@@ -61,7 +61,7 @@ public:
         bool filter_health_logs,
         const std::vector<std::pair<std::string, std::string>>& env_vars) override;
 
-    void terminate(ProcessHandle handle) override;
+    void terminate(ProcessHandle handle, bool gpu_backend) override;
     bool is_running(ProcessHandle handle) override;
     int get_exit_code(ProcessHandle handle) override;
     int wait_for_exit(ProcessHandle handle, int timeout_seconds) override;
@@ -271,7 +271,7 @@ ProcessHandle MacOSProcessPlatform::spawn(
 }
 
 // Reuse Unix implementations for other methods
-void MacOSProcessPlatform::terminate(ProcessHandle handle) {
+void MacOSProcessPlatform::terminate(ProcessHandle handle, bool gpu_backend) {
     if (handle.pid <= 0) {
         return;
     }
@@ -284,8 +284,10 @@ void MacOSProcessPlatform::terminate(ProcessHandle handle) {
             reap(handle);
             LOG(INFO, "ProcessManager") << "Process already exited; reaped PID "
                                         << handle.pid << std::endl;
-            LOG(INFO, "ProcessManager") << "Process terminated, waiting for GPU driver cleanup..." << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            if (gpu_backend) {
+                LOG(INFO, "ProcessManager") << "Process terminated, waiting for GPU driver cleanup..." << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(2));
+            }
             return;
         }
     } else if (errno == ECHILD) {
@@ -326,8 +328,10 @@ void MacOSProcessPlatform::terminate(ProcessHandle handle) {
         }
     }
 
-    LOG(INFO, "ProcessManager") << "Process terminated, waiting for GPU driver cleanup..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    if (gpu_backend) {
+        LOG(INFO, "ProcessManager") << "Process terminated, waiting for GPU driver cleanup..." << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
 }
 
 bool MacOSProcessPlatform::is_running(ProcessHandle handle) {

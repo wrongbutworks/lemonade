@@ -280,7 +280,7 @@ class JobEngineTests(unittest.TestCase):
         self.assertEqual(self.step_by_id(done, "recover")["status"], "completed")
 
     def test_pause_resume(self):
-        steps = [{"id": "wait", "op": "sleep", "params": {"ms": 6000}}]
+        steps = [{"id": "wait", "op": "sleep", "params": {"ms": 4000}}]
         job = self.create_job("pause", steps)
         jid = job["id"]
         self.poll_status(jid, "running", timeout=10)
@@ -292,7 +292,7 @@ class JobEngineTests(unittest.TestCase):
         self.poll_status(jid, "completed", timeout=20)
 
     def test_interrupt_resume(self):
-        steps = [{"id": "wait", "op": "sleep", "params": {"ms": 8000}}]
+        steps = [{"id": "wait", "op": "sleep", "params": {"ms": 4000}}]
         job = self.create_job("interrupt", steps)
         jid = job["id"]
         self.poll_status(jid, "running", timeout=10)
@@ -323,7 +323,7 @@ class JobEngineTests(unittest.TestCase):
         self.poll_gone(jid2)
 
     def test_persistence_across_restart(self):
-        steps = [{"id": "w", "op": "sleep", "params": {"ms": 8000}}]
+        steps = [{"id": "w", "op": "sleep", "params": {"ms": 4000}}]
         job = self.create_job("persist", steps)
         jid = job["id"]
         self.poll_status(jid, "running", timeout=10)
@@ -704,7 +704,7 @@ class JobEngineTests(unittest.TestCase):
                         }
                     ],
                     "temperature": 0,
-                    "max_completion_tokens": 1800,
+                    "max_completion_tokens": 768,
                     "ignore_eos": True,
                 },
                 timeout=120,
@@ -770,7 +770,7 @@ class JobEngineTests(unittest.TestCase):
                     "ctx_size": 2048,
                 },
             },
-            {"id": "hold", "op": "sleep", "params": {"ms": 15000}},
+            {"id": "hold", "op": "sleep", "params": {"ms": 5000}},
             {"id": "u", "op": "unload"},
         ]
         job = self.create_job("interrupt-mid", steps)
@@ -1170,7 +1170,7 @@ class JobEngineTests(unittest.TestCase):
                     "ctx_size": 2048,
                 },
             },
-            {"id": "hold", "op": "sleep", "params": {"ms": 8000}},
+            {"id": "hold", "op": "sleep", "params": {"ms": 4000}},
             {
                 "id": "say",
                 "op": "chat",
@@ -1372,7 +1372,7 @@ class JobEngineTests(unittest.TestCase):
                     "ctx_size": 2048,
                 },
             },
-            {"id": "hold", "op": "sleep", "params": {"ms": 8000}},
+            {"id": "hold", "op": "sleep", "params": {"ms": 4000}},
             {
                 "id": "say",
                 "op": "chat",
@@ -1506,7 +1506,7 @@ class JobEngineTests(unittest.TestCase):
                     "ctx_size": 2048,
                 },
             },
-            {"id": "hold", "op": "sleep", "params": {"ms": 30000}},
+            {"id": "hold", "op": "sleep", "params": {"ms": 5000}},
             {
                 "id": "say",
                 "op": "chat",

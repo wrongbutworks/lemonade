@@ -395,7 +395,7 @@ void SDServer::unload() {
     const ProcessHandle handle = consume_process_handle_for_cleanup();
     if (has_process_handle(handle)) {
         LOG(INFO, "SDServer") << "Stopping server (PID: " << handle.pid << ")" << std::endl;
-        utils::ProcessManager::stop_process(handle);
+        utils::ProcessManager::stop_process(handle, device_type_ == DEVICE_GPU);
     }
     image_defaults_ = ImageDefaults{};
 }

@@ -579,7 +579,7 @@ void LlamaCppServer::load(const std::string& model_name,
     if (!wait_for_ready("/health")) {
         const ProcessHandle handle = consume_process_handle_for_cleanup();
         if (has_process_handle(handle)) {
-            ProcessManager::stop_process(handle);
+            ProcessManager::stop_process(handle, device_type_ == DEVICE_GPU);
         }
         throw std::runtime_error("llama-server failed to start");
     }
@@ -593,7 +593,7 @@ void LlamaCppServer::unload() {
 
     const ProcessHandle handle = consume_process_handle_for_cleanup();
     if (has_process_handle(handle)) {
-        ProcessManager::stop_process(handle);
+        ProcessManager::stop_process(handle, device_type_ == DEVICE_GPU);
     }
 }
 

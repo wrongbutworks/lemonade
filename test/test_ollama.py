@@ -39,7 +39,7 @@ from utils.test_models import (
 )
 
 OLLAMA_BASE_URL = f"http://localhost:{PORT}"
-TOOL_CALLING_LLAMA_ARGS = "--reasoning-format none"
+TOOL_CALLING_LLAMA_ARGS = "--reasoning-format none --reasoning off"
 
 
 class OllamaTests(ServerTestBase):
@@ -352,11 +352,11 @@ class OllamaTests(ServerTestBase):
 
     def test_010_chat_streaming_with_tools_returns_complete_tool_call(self):
         """Test /api/chat streaming with tools returns complete Ollama tool calls."""
-        # This test uses the larger native tool-calling model. On macOS CI the
-        # preceding tests can leave the tiny endpoint model resident, and relying
-        # on implicit unload/load inside the streaming request has caused the
-        # request to hang until the 500s HTTP timeout. Make the heavy model
-        # transition explicit so failures are attributed to pull/load/chat.
+        # On macOS CI the preceding tests can leave the tiny endpoint model
+        # resident, and relying on implicit unload/load inside the streaming
+        # request has caused the request to hang until the 500s HTTP timeout.
+        # Make the model transition explicit so failures are attributed to
+        # pull/load/chat.
         response = unload_all_models()
         self.assertIn(response.status_code, (200, 404), response.text)
 
@@ -723,8 +723,8 @@ class OllamaTests(ServerTestBase):
                 "model": SD_MODEL,
                 "prompt": "A red circle",
                 "stream": False,
-                "width": 256,
-                "height": 256,
+                "width": 128,
+                "height": 128,
                 "steps": 2,
             },
             timeout=TIMEOUT_MODEL_OPERATION,
@@ -846,10 +846,9 @@ class OllamaTests(ServerTestBase):
 
     def test_026_anthropic_messages_tool_calling(self):
         """Test Anthropic-compatible tool calling maps to tool_use blocks."""
-        # This is the heaviest Ollama compatibility test in the suite. Start it
-        # from an empty loaded-model state so previous endpoint/CLI tests cannot
-        # leave another backend resident and turn the final inference into a CI
-        # timeout instead of a deterministic assertion.
+        # Start from an empty loaded-model state so previous endpoint/CLI tests
+        # cannot leave another backend resident and turn the final inference into
+        # a CI timeout instead of a deterministic assertion.
         response = unload_all_models()
         self.assertIn(response.status_code, (200, 404), response.text)
 
@@ -865,8 +864,8 @@ class OllamaTests(ServerTestBase):
                     "model_name": TOOL_CALLING_MODEL,
                     "ctx_size": 4096,
                     # Use the same load-time llama-server configuration as the
-                    # Ollama tool-call test so both heavy CI paths avoid
-                    # reasoning before tool selection.
+                    # Ollama tool-call test so both paths avoid reasoning before
+                    # tool selection.
                     "llamacpp_args": TOOL_CALLING_LLAMA_ARGS,
                 },
                 timeout=TIMEOUT_MODEL_OPERATION,

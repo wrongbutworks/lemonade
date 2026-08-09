@@ -16,9 +16,9 @@ ProcessHandle ProcessManager::start_process(
     return platform->spawn(executable, args, working_dir, inherit_output, filter_health_logs, env_vars);
 }
 
-void ProcessManager::stop_process(ProcessHandle handle) {
+void ProcessManager::stop_process(ProcessHandle handle, bool gpu_backend) {
     auto platform = create_process_platform();
-    platform->terminate(handle);
+    platform->terminate(handle, gpu_backend);
 }
 
 bool ProcessManager::is_running(ProcessHandle handle) {
