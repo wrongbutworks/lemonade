@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-08-22T06:44:01.779388+00:00",
+  "run_id": "31989368589",
+  "run_url": "https://github.com/wrongbutworks/lemonade/actions/runs/31989368589",
+  "repo": "wrongbutworks/lemonade",
+  "repo_url": "https://github.com/wrongbutworks/lemonade",
+  "actions_url": "https://github.com/wrongbutworks/lemonade/actions/workflows/benchmark-regression.yml",
+  "commit": "379ef10d1d58197ce4d6a3a04c97167d9616aa1f",
+  "lemonade_version": null,
+  "by_model_scenario": {},
+  "history": {}
+}
